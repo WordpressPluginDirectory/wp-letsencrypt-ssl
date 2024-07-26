@@ -3,7 +3,7 @@ Contributors: gowebsmarty, gwsharsha, freemius
 Tags: security,ssl,https,https redirect,ssl certificate
 Requires at least: 5.4
 License: GPL3
-Tested up to: 6.5
+Tested up to: 6.6
 Requires PHP: 7.0
 Stable tag: 7.4.0
 
