@@ -7,7 +7,7 @@
  * Plugin Name:       WP Encryption - One Click SSL & Force HTTPS
  * Plugin URI:        https://wpencryption.com
  * Description:       Secure your WordPress site with free SSL certificate and force HTTPS. Enable HTTPS padlock. Just activating this plugin won't help! - Please run the SSL install form of WP Encryption found on left panel.
- * Version:           7.6.0
+ * Version:           7.6.1
  * Author:            WP Encryption SSL HTTPS
  * Author URI:        https://wpencryption.com
  * License:           GNU General Public License v3.0
@@ -34,7 +34,7 @@ if ( !defined( 'ABSPATH' ) ) {
  * Definitions
  */
 if ( !defined( 'WPLE_PLUGIN_VER' ) ) {
-    define( 'WPLE_PLUGIN_VER', '7.6.0' );
+    define( 'WPLE_PLUGIN_VER', '7.6.1' );
 }
 if ( !defined( 'WPLE_BASE' ) ) {
     define( 'WPLE_BASE', plugin_basename( __FILE__ ) );
@@ -108,14 +108,21 @@ if ( function_exists( 'wple_fs' ) ) {
         do_action( 'wple_fs_loaded' );
     }
 }
-function wple_fs_legacy_checkout(  $template  ) {
-    if ( false !== strpos( $template, '&billing_cycle=annual' ) ) {
-        $template = str_replace( '&billing_cycle=annual', '&billing_cycle=annual&checkout_style=legacy', $template );
-    }
-    return $template;
-}
+if ( !wple_fs()->is_premium() ) {
+    wple_fs()->add_filter( 'templates/checkout.php', 'wple_fs_legacy_checkout' );
+    if ( !function_exists( 'wple_fs_legacy_checkout' ) ) {
+        function wple_fs_legacy_checkout(  $template  ) {
+            if ( false !== strpos( $template, '&billing_cycle=annual' ) ) {
+                $template = str_replace( '&billing_cycle=annual', '&billing_cycle=annual&checkout_style=legacy', $template );
+            }
+            // else if (false !== strpos($template, '&billing_cycle=lifetime')) {
+            //     $template = str_replace('&billing_cycle=lifetime', '&billing_cycle=lifetime&checkout_style=legacy', $template);
+            // }
+            return $template;
+        }
 
-wple_fs()->add_filter( 'templates/checkout.php', 'wple_fs_legacy_checkout' );
+    }
+}
 require_once WPLE_DIR . 'classes/le-trait.php';
 /**
  * Plugin Activator hook
