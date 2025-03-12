@@ -178,7 +178,7 @@ class WPLE_Admin {
             delete_option( 'wple_plan_choose' );
             update_option( 'wple_version', WPLE_PLUGIN_VER );
         } else {
-            if ( version_compare( get_option( 'wple_version' ), '7.6.0', '<=' ) ) {
+            if ( version_compare( get_option( 'wple_version' ), '7.7.3', '<=' ) ) {
                 delete_option( 'wple_plan_choose' );
                 update_option( 'wple_version', WPLE_PLUGIN_VER );
             }
@@ -188,7 +188,7 @@ class WPLE_Admin {
         if ( $activated = get_option( 'wple_activate' ) ) {
             $after3days = strtotime( '+3 day', $activated );
             if ( time() >= $after3days ) {
-                if ( FALSE === get_option( 'wple_notice_disabled_trial' ) ) {
+                if ( FALSE === get_option( 'wple_notice_disabled_trial' ) && !wp_next_scheduled( 'wple_remindlater_trial' ) ) {
                     update_option( 'wple_notice_trial', true );
                 }
             }
@@ -261,7 +261,7 @@ class WPLE_Admin {
         //   '</a>'
         // ), 'a');
         // if (wple_fs()->is__premium_only()) {
-        //   $prosupport = 'Premium support forum - <a href="https://gowebsmarty.in" target="_blank">https://gowebsmarty.in</a>.';
+        //   $prosupport = 'Premium support forum - <a href="https://support.wpencryption.com" target="_blank">https://support.wpencryption.com</a>.';
         // }
         if ( !is_plugin_active( 'backup-bolt/backup-bolt.php' ) && FALSE === get_option( 'wple_backup_suggested' ) ) {
             $action = 'install-plugin';
@@ -552,7 +552,7 @@ class WPLE_Admin {
      * @return void
      */
     public function wple_upgrade_block( &$html ) {
-        $upgradeurl = admin_url( '/admin.php?page=wp_encryption-pricing' );
+        $upgradeurl = 'https://wpencryption.com/?utm_source=wordpress&utm_medium=upgrade&utm_campaign=wpencryption#pricing';
         ///$upgradeurl = admin_url('/admin.php?page=wp_encryption-pricing&checkout=true&plan_id=8210&plan_name=pro&billing_cycle=lifetime&pricing_id=7965&currency=usd&coupon=FIRSTBUY');
         $nopricing = get_option( 'wple_no_pricing' );
         //gdy
@@ -620,6 +620,12 @@ class WPLE_Admin {
               <h4>' . esc_html__( 'SSL Renewal', 'wp-letsencrypt-ssl' ) . ' <span class="dashicons dashicons-editor-help wple-tooltip" data-tippy="' . esc_attr__( 'Free users must manually renew / re-generate SSL certificate every 90 days.', 'wp-letsencrypt-ssl' ) . '"></span></h4>
               <span class="wple-free">' . $manual . '</span>
               <span class="wple-pro">' . $automatic . '</span>
+            </div>
+            <div class="wple-compare-item">
+              <img src="' . WPLE_URL . 'admin/assets/secure-mail.png"/>
+              <h4>' . esc_html__( 'Secure Mail', 'wp-letsencrypt-ssl' ) . ' <span class="dashicons dashicons-editor-help wple-tooltip" data-tippy="' . esc_attr__( 'Secure email & webmail with SSL/TLS', 'wp-letsencrypt-ssl' ) . '"></span></h4>
+              <span class="wple-free">' . esc_html__( 'Not Available', 'wp-letsencrypt-ssl' ) . '</span>
+              <span class="wple-pro">' . esc_html__( 'Available', 'wp-letsencrypt-ssl' ) . '</span>
             </div>
             <div class="wple-compare-item">
               <img src="' . WPLE_URL . 'admin/assets/wildcard.png"/>
@@ -1058,7 +1064,7 @@ class WPLE_Admin {
                     <li><strong>DNS</strong> Automation <span class="dashicons dashicons-editor-help wple-tooltip" data-tippy="Automatic Domain verification with DNS if HTTP domain verification fails"></span></li>
                     <li><strong>Vulnerability</strong> Scanner <span class="dashicons dashicons-editor-help wple-tooltip" data-tippy="Automate daily scanning of your site for known vulnerabilities and get notified instantly"></span></li>
                     <li><strong>Never</strong> expires <span class="dashicons dashicons-editor-help wple-tooltip" data-tippy="Never worry about SSL again - Your SSL certificate will be automatically renewed in background 30 days prior to its expiry dates"></span></li>
-                    <li><strong>Priority</strong> support <span class="dashicons dashicons-editor-help wple-tooltip" data-tippy="gowebsmarty.in"></span></li>
+                    <li><strong>Priority</strong> support <span class="dashicons dashicons-editor-help wple-tooltip" data-tippy="support.wpencryption.com"></span></li>
                 </ul>
                 <div class="pricing-btn-block">
                     <a href="<?php 
