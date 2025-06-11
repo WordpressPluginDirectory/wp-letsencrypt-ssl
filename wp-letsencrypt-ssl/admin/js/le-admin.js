@@ -153,6 +153,7 @@
           // } else if (response !== 'fail') {
           //   alert("Partially verified. Could not verify " + String(response));
         } else {
+          //fail
           if (response.indexOf('ul') >= 0) {
             $('#wple-letsdebug').html(response);
           }
@@ -197,6 +198,7 @@
         if (response == 'empty') {
           alert('HTTP challenges empty. Please use RESET once and try again.');
         } else if (response == 'not_possible') {
+          //deprecated
           $('.http-notvalid-blocked').addClass('active');
         } else if (response === '1') {
           $this.text('Verified');
@@ -401,27 +403,6 @@
   /**
    * v5.2.6
    */
-  // var handler = FS.Checkout.configure({
-  //   plugin_id: '5090',
-  //   plan_id: '10643',
-  //   public_key: 'pk_f6a07c106bf4ef064d9ac4b989e02',
-  //   image: 'https://s3-us-west-2.amazonaws.com/freemius/plugins/5090/icons/766cb1e9dfd1b9436c3fb2c489a667ea.png'
-  // });
-
-  // $('#upgradetocdn').on('click', function (e) {
-  //   handler.open({
-  //     name: 'WP Encryption',
-  //     licenses: 1,
-  //     // You can consume the response for after purchase logic.
-  //     purchaseCompleted: function (response) {
-  //       // The logic here will be executed immediately after the purchase confirmation.                                // alert(response.user.email);
-  //     },
-  //     success: function (response) {
-  //       // The logic here will be executed after the customer closes the checkout, after a successful purchase.                                // alert(response.user.email);
-  //     }
-  //   });
-  //   e.preventDefault();
-  // });
 
   $('.have-root-ssh').click(function () {
     $(this).siblings().removeClass('active');

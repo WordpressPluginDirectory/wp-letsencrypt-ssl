@@ -24,6 +24,10 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+if ( !defined( 'ABSPATH' ) ) {
+    exit;
+}
+// Exit if accessed directly
 require_once WPLE_DIR . 'classes/le-trait.php';
 /**
  * Sub-directory http challenge
@@ -67,9 +71,9 @@ class WPLE_Subdir_Challenge_Helper {
         //     </div>
         //   </div>';
         //   } else {
-        $upgradeurl = admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&plan_id=8210&plan_name=pro&billing_cycle=lifetime&pricing_id=7965&currency=usd' );
+        $upgradeurl = admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&checkout_style=legacy&plan_id=8210&plan_name=pro&billing_cycle=lifetime&pricing_id=7965&currency=usd' );
         if ( !$havecPanel ) {
-            $upgradeurl = admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&plan_id=8210&plan_name=pro&billing_cycle=annual&pricing_id=7965&currency=usd' );
+            $upgradeurl = admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&checkout_style=legacy&plan_id=8210&plan_name=pro&billing_cycle=annual&pricing_id=7965&currency=usd' );
         }
         $output .= '<div class="wple-error-firewall">
         <div>
@@ -138,8 +142,10 @@ class WPLE_Subdir_Challenge_Helper {
     <button id="verify-subhttp" class="subdir_verify"><span class="dashicons dashicons-update stable"></span>&nbsp;' . esc_html__( 'Verify HTTP Challenges', 'wp-letsencrypt-ssl' ) . '</button>
 
     <div class="http-notvalid">' . esc_html__( 'Could not verify HTTP challenges. Please check whether HTTP challenge files uploaded to acme-challenge folder is publicly accessible.', 'wp-letsencrypt-ssl' ) . ' ' . esc_html__( 'Some hosts purposefully block BOT access to acme-challenge folder, please try completing DNS challenge in such case.', 'wp-letsencrypt-ssl' );
-        if ( FALSE !== ($havecp = get_option( 'wple_have_cpanel' )) && $havecp && !wple_fs()->can_use_premium_code__premium_only() ) {
+        if ( FALSE !== ($havecp = get_option( 'wple_have_cpanel' )) && $havecp ) {
             $list .= ' Upgrade to <b>PRO</b> version for fully automatic domain verification.';
+        } else {
+            $list .= ' You can easily generate premium SSL certificate in Annual <b>PRO</b> Plan without the need of domain verification.';
         }
         $list .= '</div>';
         //5.8.2
@@ -197,7 +203,7 @@ class WPLE_Subdir_Challenge_Helper {
 
     public static function download_challenge_files() {
         if ( isset( $_GET['subdir_chfile'] ) ) {
-            if ( !wp_verify_nonce( $_GET['nc'], 'subdir_ch' ) || !current_user_can( 'manage_options' ) ) {
+            if ( !wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nc'] ) ), 'subdir_ch' ) || !current_user_can( 'manage_options' ) ) {
                 die( 'Unauthorized request. Please try again.' );
             }
             $opts = get_option( 'wple_opts' );

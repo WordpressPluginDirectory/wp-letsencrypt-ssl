@@ -1,30 +1,9 @@
 <?php
 
-//if a valid cert generated for same domain within last 2 days, then use it
-/**
- * @package WP Encryption
- *
- * @author     WP Encryption
- * @copyright  Copyright (C) 2019-2024, WP Encryption
- * @license    http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License, version 3
- * @link       https://wpencryption.com
- * @since      Class available since Release 1.0.0
- *
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- */
+if ( !defined( 'ABSPATH' ) ) {
+    exit;
+}
+// Exit if accessed directly
 /**
  * Autoloader
  * 
@@ -241,10 +220,12 @@ class WPLE_Core {
                 $sourceIP
             );
         } catch ( Exception $e ) {
+            $pro_advantage = '';
+            $pro_advantage = '<strong><i>You can still generate premium SSL certificate in Annual <b>PRO</b> Plan without these requirements.</i></strong>';
             update_option( 'wple_error', 1 );
             $mode = ( $this->iscron ? 'a' : 'w' );
             $this->wple_log(
-                "VERSION " . WPLE_PLUGIN_VER . "\n\nCREATE_CLIENT:" . $e,
+                "VERSION " . WPLE_PLUGIN_VER . "\n\nCREATE_CLIENT:" . $e . "\n\n{$pro_advantage}",
                 'error',
                 $mode,
                 true
@@ -379,7 +360,7 @@ class WPLE_Core {
                 $this->order->updateOrderData();
                 if ( $this->order->status == 'invalid' ) {
                     update_option( 'wple_order_refreshed', true );
-                    $this->wple_log( "Order failed due to failed verification or other reasons. Getting new challenges from new order.\n" );
+                    $this->wple_log( "Order failed due to failed verification or other reasons. Getting new challenges from new order. PLEASE TRY DNS VERIFICATION.\n" );
                     $this->wple_create_client();
                     $this->wple_generate_order();
                     $this->wple_verify_free_order();
@@ -483,7 +464,7 @@ class WPLE_Core {
         $srvr = array(
             'challenge_folder_exists' => '',
             'certificate_exists'      => file_exists( WPLE_Trait::wple_cert_directory() . 'certificate.crt' ),
-            'server_software'         => $_SERVER['SERVER_SOFTWARE'],
+            'server_software'         => sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] ),
             'http_host'               => site_url(),
             'pro'                     => ( wple_fs()->is__premium_only() ? 'PRO' : 'FREE' ),
         );
@@ -624,9 +605,9 @@ class WPLE_Core {
       <br/>';
         ///if (FALSE == get_option('wple_no_pricing')) {
         $body .= '<br /><br />';
-        $body .= '<b>' . esc_html__( 'WP Encryption PRO can automate this entire process in one click including SSL installation on cPanel hosting and auto renewal of certificates every 90 days', 'wp-letsencrypt-ssl' ) . '!. <br><a href="https://wpencryption.com/?utm_source=wordpress&utm_medium=success&utm_campaign=wpencryption#pricing" style="background: #0073aa; text-decoration: none; color: #fff; padding: 12px 20px; display: inline-block; margin: 10px 0; font-weight: bold;">' . esc_html__( 'UPGRADE TO PREMIUM', 'wp-letsencrypt-ssl' ) . '</a></b><br /><br />';
+        $body .= '<b>' . esc_html__( 'WP Encryption PRO can automate this entire process in one click including SSL installation on cPanel hosting and auto renewal of certificates every 90 days', 'wp-letsencrypt-ssl' ) . '!. <br><a href="https://wpencryption.com/pricing/?utm_source=wordpress&utm_medium=success&utm_campaign=wpencryption" style="background: #0073aa; text-decoration: none; color: #fff; padding: 12px 20px; display: inline-block; margin: 10px 0; font-weight: bold;">' . esc_html__( 'UPGRADE TO PREMIUM', 'wp-letsencrypt-ssl' ) . '</a></b><br /><br />';
         $body .= "<h3>" . esc_html__( "Don't have cPanel hosting?", 'wp-letsencrypt-ssl' ) . "</h3>";
-        $body .= '<p>We don\'t wanna disappoint you!. Opt for our <a href="https://wpencryption.com/?utm_source=wordpress&utm_medium=success&utm_campaign=wpencryption#pricing"><strong>Annual Pro plan</strong><a> and setup SSL for your site hosted on ANY hosting platform including Managed WordPress platforms.' . WPLE_Trait::wple_kses( __( 'With free version, You can download and send these SSL certificates to your hosting support asking them to install these SSL certificates.', 'wp-letsencrypt-ssl' ) ) . '</p><br /><br />';
+        $body .= '<p>We don\'t wanna disappoint you!. Opt for our <a href="https://wpencryption.com/pricing/?utm_source=wordpress&utm_medium=success&utm_campaign=wpencryption"><strong>Annual Pro plan</strong><a> and setup SSL for your site hosted on ANY hosting platform including Managed WordPress platforms.' . WPLE_Trait::wple_kses( __( 'With free version, You can download and send these SSL certificates to your hosting support asking them to install these SSL certificates.', 'wp-letsencrypt-ssl' ) ) . '</p><br /><br />';
         ///}
         if ( get_option( 'wple_email_certs' ) == true ) {
             $certificate = WPLE_Trait::wple_cert_directory() . 'certificate.crt';

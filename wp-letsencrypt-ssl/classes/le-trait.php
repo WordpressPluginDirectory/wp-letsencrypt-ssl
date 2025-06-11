@@ -180,8 +180,8 @@ class WPLE_Trait {
         $srvr = array(
             'challenge_folder_exists' => '',
             'certificate_exists'      => file_exists( WPLE_Trait::wple_cert_directory() . 'certificate.crt' ),
-            'server_software'         => $_SERVER['SERVER_SOFTWARE'],
-            'http_host'               => $_SERVER['HTTP_HOST'],
+            'server_software'         => sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] ),
+            'http_host'               => sanitize_text_field( $_SERVER['HTTP_HOST'] ),
             'pro'                     => ( wple_fs()->is__premium_only() ? 'PRO' : 'FREE' ),
         );
         $data = array_merge( $srvr, $args );
@@ -247,23 +247,31 @@ class WPLE_Trait {
         $allowed = array(
             'strong' => array(),
             'b'      => array(),
+            'small'  => array(),
             'sup'    => array(
                 'style' => array(),
             ),
             'h1'     => array(),
             'h2'     => array(),
             'h3'     => array(),
+            'h4'     => array(),
+            'h5'     => array(),
+            'h6'     => array(),
             'br'     => array(),
+            'span'   => array(
+                'class' => array(),
+            ),
         );
-        if ( $additional == 'a' ) {
-            $allowed['a'] = array(
-                'href'       => array(),
-                'rel'        => array(),
-                'target'     => array(),
-                'title'      => array(),
-                'data-tippy' => array(),
-            );
-        }
+        //if ($additional == 'a') {
+        $allowed['a'] = array(
+            'href'       => array(),
+            'rel'        => array(),
+            'target'     => array(),
+            'title'      => array(),
+            'data-tippy' => array(),
+            'style'      => array(),
+        );
+        //}
         return wp_kses( $translated, $allowed );
     }
 
@@ -328,8 +336,7 @@ class WPLE_Trait {
             $rule .= "RewriteCond %{ENV:HTTPS} !=on" . "\n";
         }
         if ( is_multisite() ) {
-            global $wp_version;
-            $sites = ( $wp_version >= 4.6 ? get_sites() : wp_get_sites() );
+            $sites = get_sites();
             foreach ( $sites as $domn ) {
                 $domain = str_ireplace( array("http://", "https://", "www."), array("", "", ""), $domn->domain );
                 if ( false != ($spos = stripos( $domain, '/' )) ) {
@@ -694,6 +701,8 @@ class WPLE_Trait {
      * @return html
      */
     public static function wple_other_plugins( $sslhealthpage = false ) {
+        //disabled since 7.7.7
+        return '';
         $action = 'install-plugin';
         $fastcsslug = 'fast-cookie-consent';
         $fastcspluginstallURL = wp_nonce_url( add_query_arg( array(
@@ -887,6 +896,8 @@ class WPLE_Trait {
                 set_transient( 'wple_ssllabs', $res, DAY_IN_SECONDS );
                 $validTo = $res['certs'][0]['notAfter'];
                 $to = date( 'd-m-Y', $validTo / 1000 );
+                update_option( 'wple_ssllabs_expiry', strtotime( $to ) );
+                //since 7.7.7 IMP
                 $tenDaysToExpiry = strtotime( '-10 day', strtotime( $to ) );
                 if ( strtotime( 'now' ) >= $tenDaysToExpiry ) {
                     //already in last 10 days to expiry
@@ -950,6 +961,7 @@ class WPLE_Trait {
 
     /**
      * Recheck if installed SSL expiring in 10 days
+     * NO LONGER USED
      *
      * @since 7.2.0
      * @return bool

@@ -141,12 +141,12 @@ class LEConnector {
                 curl_setopt( $handle, CURLOPT_NOBODY, true );
                 break;
             default:
-                throw LEConnectorException::MethodNotSupportedException( $method );
+                throw LEConnectorException::MethodNotSupportedException( esc_html( $method ) );
                 break;
         }
         $response = curl_exec( $handle );
         if ( curl_errno( $handle ) ) {
-            throw LEConnectorException::CurlErrorException( curl_error( $handle ) );
+            throw LEConnectorException::CurlErrorException( esc_html( curl_error( $handle ) ) );
         }
         $headerSize = curl_getinfo( $handle, CURLINFO_HEADER_SIZE );
         $statusCode = curl_getinfo( $handle, CURLINFO_HTTP_CODE );
@@ -161,7 +161,7 @@ class LEConnector {
             'body'     => ( $jsonbody === null ? $body : $jsonbody ),
         );
         if ( $this->log instanceof \Psr\Log\LoggerInterface ) {
-            $this->log->debug( $method . ' response received', $jsonresponse );
+            ///$this->log->debug($method . ' response received', $jsonresponse);
         } elseif ( $this->log >= LEClient::LOG_DEBUG ) {
             LEFunctions::log( $jsonresponse );
         } elseif ( stripos( $requestURL, 'authz' ) && $method == 'POST' ) {
@@ -242,7 +242,7 @@ class LEConnector {
         }
         if ( !file_exists( $privateKeyFile ) ) {
             WPLE_Trait::wple_logger(
-                "Could not create key files due to file permission issues. Please check if folder permission is set to 0755.",
+                "Could not create key files due to file permission issues. Please check if public_html/keys/ folder permission is set to 0755. You can still generate premium SSL certificate in Annual <b>PRO</b> Plan without these requirements.",
                 "error",
                 "a",
                 true
