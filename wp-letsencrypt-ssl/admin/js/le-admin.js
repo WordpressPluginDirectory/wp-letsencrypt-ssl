@@ -531,6 +531,31 @@
     });
   });
 
+  //since 7.8.1
+  $('.wple-notice-dismiss').click(function (e) {
+    var $this = $(this);
+    e.preventDefault();
+
+    var ctxt = $this.attr('data-context');
+
+    jQuery.ajax({
+      method: 'POST',
+      url: ajaxurl,
+      dataType: 'text',
+      data: {
+        action: 'wple_dismiss_notice',
+        context: ctxt,
+      },
+      beforeSend: function () {},
+      error: function () {
+        alert('Failed to save! Please try again');
+      },
+      success: function (response) {
+        $('.notice-info.' + ctxt).fadeOut('slow');
+      },
+    });
+  });
+
   function copycert(elem) {
     var element = document.querySelector(elem);
     if (typeof element !== 'undefined') {
@@ -774,6 +799,42 @@
       },
       success: function (response) {
         $('.wple-notice-' + $this.attr('data-context')).fadeOut('slow');
+      },
+    });
+  });
+
+  //since 7.8.0
+  $('.wple-mscan-ignorefile').click(function (e) {
+    var $this = $(this);
+    e.preventDefault();
+
+    var ky = $this.attr('data-key');
+    var filename = $this.attr('data-file');
+    var nc = $('#wple-mscan-table').attr('data-nc');
+
+    jQuery.ajax({
+      method: 'POST',
+      url: ajaxurl,
+      dataType: 'text',
+      data: {
+        action: 'wple_mscan_ignorefile',
+        fyle: filename,
+        nc: nc,
+        remove: $this.attr('data-remove'),
+      },
+      beforeSend: function () {
+        $this.text('Processing...');
+      },
+      error: function () {
+        $this.text('Failed. Click to re-try..');
+        //alert("Failed to save! Please try again");
+      },
+      success: function (response) {
+        if (response == 1) {
+          $('tr.mscanfile-' + ky).fadeOut('fast');
+        } else {
+          $this.text('Failed. Click to re-try..');
+        }
       },
     });
   });

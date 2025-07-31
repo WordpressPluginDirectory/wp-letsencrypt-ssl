@@ -1,25 +1,19 @@
-=== WP Encryption - One Click Free SSL Certificate & SSL / HTTPS Redirect to Force HTTPS, SSL Scan ===
+=== WP Encryption - One Click Free SSL Certificate & SSL / HTTPS Redirect, Security & SSL Scan ===
 Contributors: gowebsmarty, gwsharsha
-Tags: free ssl,ssl,https,https redirect,ssl certificate
+Tags: free ssl,ssl,https,https redirect,security
 Requires at least: 5.4
 License: GPL3
 Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 7.7.8
+Stable tag: 7.8.1
 
-Lifetime SSL solution - Install free SSL certificate & enable HTTPS redirect, HTTPS mail, fix SSL errors, SSL score, SSL details & SSL monitoring.
+Lifetime SSL solution - Install free SSL certificate & enable HTTPS redirect, HTTPS mail, fix SSL errors, SSL score, Adv Security & SSL monitoring.
 
 == Description ==
 
 HTTPS Secure your WordPress site with SSL certificate provided by [Let's Encrypt®](https://letsencrypt.com) and force SSL / HTTPS sitewide, check your SSL score, fix insecure content & mixed content issues easily. Enable HTTPS secure padlock on your site within minutes.
 
-[WP Encryption](https://wpencryption.com/?utm_source=wordpress&utm_medium=description&utm_campaign=wpencryption) plugin registers your site, verifies your domain, generates SSL certificate for your site in simple mouse clicks without the need of any technical knowledge. 
-
-### 5M+ SSL certificates generated - Switch to HTTPS easily ###
-
-https://youtu.be/aKvvVlAlZ14
-
-A typical SSL installation without WP Encryption would require you to generate CSR, prove domain ownership, provide your bussiness data and deal with many more technical tasks!.
+[WP Encryption](https://wpencryption.com/?utm_source=wordpress&utm_medium=description&utm_campaign=wpencryption) plugin registers your site, verifies your domain, generates SSL certificate for your site in simple mouse clicks without the need of any technical knowledge. A typical SSL installation without WP Encryption would require you to generate CSR, prove domain ownership, provide your bussiness data and deal with many more technical tasks!.
 
 == PRO FEATURES WORTH UPGRADING ==
 
@@ -30,29 +24,37 @@ https://youtu.be/jrkFwFH7r6o
 * Automatic SSL renewal (Auto renews SSL certificate 30 days prior to expiry date)
 * Wildcard SSL support - Install Wildcard SSL certificate for your primary domain that covers ALL sub-domains. Automatic DNS based domain verification for Wildcard SSL installation (DNS should be managed by cPanel or Godaddy)
 * Multisite + Mapped domains support - Supports SSL installation for mapped domains
-* Automated regular vulnerability scanning & reporting.
-* Automatic Content Delivery Network(CDN) to boost your site performance (Annual Plan Only)
-* Blocks SQL injection, XSS, Shellshock, Remote File Inclusion, Apache Structs Exploits, Local File Inclusion attacks.
-* Blocks common web application vulnerabilities and common WordPress attacks.
-* Blocks invalid user agents, unknown user agents, CSRF, Convicted bot traffic, Spam & abuse, Probing & forced browsing, Brute force attacks.
+* Advanced security headers & SSL monitoring
 * Top notch one to one priority support - Live Chat, Email, Premium Support Forum
 * SSL installation help for non-cPanel sites
-* Daily vulnerability scan & notification
+* Automated daily vulnerability scanning & reporting.
+* Automated daily malware & integrity scan
+* Instant notification for threats & security issues
 
 [BUY PREMIUM VERSION](https://wpencryption.com/pricing/?utm_source=wordpress&utm_medium=premiumfeatures&utm_campaign=wpencryption)
+
+### 5M+ SSL certificates generated - Switch to HTTPS easily ###
+
+https://youtu.be/aKvvVlAlZ14
 
 == FREE SSL PLUGIN FEATURES ==
 * Verify domain ownership and generate free SSL certificate
 * Secure webmail and email with HTTPS
 * Download generated SSL certificate, key and Intermediate certificate files
-* Force HTTPS / Enable HTTPS 301 redirection sitewide in one click
+* Force HTTPS / Enable HTTPS with 301 htaccess redirection sitewide in one click
 * HTTPS redirection includes redirect loop fix for Cloudflare, StackPath, Load balancers and reverse proxies.
 * SSL Health page - Track your SSL score and control various SSL & Security features like HSTS strict transport security Header, HttpOnly secure cookies, etc,.
 * Enable important security headers including X-XSS-Protection, X-Content-Type-Options, Referrer-Policy
 * Enable mixed content / insecure content fixer
 * SSL monitoring & Automatic email notification prior to SSL certificate expiration
+* Advanced security features - stop user enumeration, disable file editing, hide login error, hide wp version and much more
+* Security score & security scanners including malware & integrity scanner, vulnerability scanner.
 
 (Optional) Running WordPress on a specialized VPS/Dedicated server without cPanel? You can download the generated SSL certificate files easily via "Download SSL Certificates" page and install it on your server by modifying server config file via SSH access as explained in our [DOCS](https://wpencryption.com/docs/). 
+
+== (7.8.0) NEW ADVANCED SECURITY PAGE WITH INTEGRITY SCAN & MALWARE SCAN ==
+
+Discover the brand-new ‘Advanced Security & Scanner’ page — your command center for the most powerful protection your WordPress site has ever seen. Run malware and integrity scans to detect modified, additional, or suspicious files in your installation. Stay ahead of threats and keep your security score at its peak.
 
 == ADVANCED HTTP SECURITY HEADERS ==
 
@@ -78,10 +80,6 @@ Safeguard your site from cross-site scripting attacks, clickjacking, MIME sniffi
 3. Trust: Google chrome shows non-SSL sites as 'insecure', bringing a feel of insecurity in website visitors.
 
 4. Authentic: HTTPS green padlock represents symbol of trust, authenticity and security.
-
-== (New) Vulnerability Scanner in v7.0+ ==
-
-Navigate to SSL Health & Security page and run the vulnerability scanner to scan your WordPress, Plugins and Themes for known vulnerabilities. Keep everything updated to stay secure.
 
 = REQUIREMENTS =
 Linux hosting, OpenSSL, CURL, allow_url_fopen should be enabled.
@@ -163,14 +161,32 @@ By enabling the Vulnerability Scan feature, you agree to terms & conditions of [
 Security is an important subject regarding SSL/TLS certificates, of course. It is obvious that your private key, stored on your web server, should never be accessible from the web. When the plugin created the keys directory for the first time, it will store a .htaccess file in this directory, denying all visitors. Always make sure yourself your keys aren't accessible from the web! We are in no way responsible if your private keys go public. If this does happen, the easiest solution is to check folder permissions on your server and make sure public access is forbidden for root folders. Next, create a new certificate.
 
 == Screenshots ==
-1. SSL Health & Security page with realtime SSL score
+1. SSL Health and Security Headers
 2. Generate and Install free SSL certificate while Agreeing to TOS
 3. SSL certificate generation successful message
-4. Download/Copy generated SSL certificate & key
-5. Force HTTPS via htaccess or WordPress method
-6. Mixed Content Scanner to identify insecure contents on HTTPS site
+4. Malware scanner & Vulnerability scanner
+5. Download/Copy generated SSL certificate & key
+6. Force HTTPS via htaccess or WordPress method
+7. Mixed Content Scanner to identify insecure contents on HTTPS site
 
 == Changelog ==
+
+= 7.8.1 =
+* Free - admin notice to show new advanced security page
+* Freemius sdk updated to 2.12.1
+
+= 7.8.0 =
+* New Advanced Security & Scanner page
+* resolved issue with JS redirection
+* security score
+* htaccess based redirection for all servers
+* re-organized SSL health & security headers v/s Advanced security features
+* PRO - daily SSL scan if not exists
+
+= 7.7.9 =
+* resolved issue with .well-known htaccess
+* readme updated
+* various links corrected
 
 = 7.7.5 =
 * PRO - Improved DNS verification

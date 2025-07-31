@@ -5,6 +5,7 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 // Exit if accessed directly
 require_once WPLE_DIR . 'classes/le-core.php';
+require_once WPLE_DIR . 'classes/le-mscan.php';
 /**
  * Todo:
  * A file to disable force https completely when site lockout
@@ -22,6 +23,7 @@ class WPLE_Handler {
         $this->wple_intro_pricing_handler();
         $this->wple_vulnerabilities_update();
         $this->wple_ssllabs_new_scan();
+        $this->wple_malware_scan();
     }
 
     public function wple_auto_handler() {
@@ -163,14 +165,14 @@ class WPLE_Handler {
                 update_option( 'wple_plan_choose', 1 );
                 if ( $_GET['gopro'] == 2 ) {
                     //unlimited
-                    wp_redirect( admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&checkout_style=legacy&plan_id=8210&plan_name=pro&billing_cycle=annual&pricing_id=10873&currency=usd' ), 302 );
+                    wp_redirect( admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&billing_cycle_selector=responsive_list&plan_id=8210&plan_name=pro&billing_cycle=annual&pricing_id=10873&currency=usd' ), 302 );
                 } else {
                     if ( $_GET['gopro'] == 3 ) {
                         //annual
-                        wp_redirect( admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&checkout_style=legacy&plan_id=8210&plan_name=pro&billing_cycle=annual&pricing_id=7965&currency=usd' ), 302 );
+                        wp_redirect( admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&billing_cycle_selector=responsive_list&plan_id=8210&plan_name=pro&billing_cycle=annual&pricing_id=7965&currency=usd' ), 302 );
                     } else {
                         //single lifetime
-                        wp_redirect( admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&checkout_style=legacy&plan_id=8210&plan_name=pro&billing_cycle=lifetime&pricing_id=7965&currency=usd' ), 302 );
+                        wp_redirect( admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&billing_cycle_selector=responsive_list&plan_id=8210&plan_name=pro&billing_cycle=lifetime&pricing_id=7965&currency=usd' ), 302 );
                     }
                 }
                 exit;
@@ -178,13 +180,13 @@ class WPLE_Handler {
                 if ( isset( $_GET['gofirewall'] ) ) {
                     update_option( 'wple_plan_choose', 1 );
                     ///wp_redirect(admin_url('/admin.php?page=wp_encryption-pricing&checkout=true&plan_id=11394&plan_name=pro&billing_cycle=annual&pricing_id=11717&currency=usd'), 302);
-                    wp_redirect( admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&checkout_style=legacy&plan_id=8210&plan_name=pro&billing_cycle=annual&pricing_id=7965&currency=usd' ), 302 );
+                    wp_redirect( admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&billing_cycle_selector=responsive_list&plan_id=8210&plan_name=pro&billing_cycle=annual&pricing_id=7965&currency=usd' ), 302 );
                     exit;
                 } else {
                     if ( isset( $_GET['gositelock'] ) ) {
                         update_option( 'wple_plan_choose', 1 );
                         ///wp_redirect(admin_url('/admin.php?page=wp_encryption-pricing&checkout=true&plan_id=11394&plan_name=pro&billing_cycle=annual&pricing_id=11717&currency=usd'), 302);
-                        wp_redirect( admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&checkout_style=legacy&plan_id=20784&plan_name=sitelock&billing_cycle=annual&currency=usd' ), 302 );
+                        wp_redirect( admin_url( '/admin.php?page=wp_encryption-pricing&checkout=true&billing_cycle_selector=responsive_list&plan_id=20784&plan_name=sitelock&billing_cycle=annual&currency=usd' ), 302 );
                         exit;
                     }
                 }
@@ -206,6 +208,7 @@ class WPLE_Handler {
             ignore_user_abort( true );
         }
         global $wp_version;
+        update_option( 'wple_vulnerability_lastscan', time() );
         $wordpress_core = $wp_version;
         $wordpress_themes = wp_get_themes();
         $wordpress_plugins = get_plugins();
@@ -277,6 +280,17 @@ class WPLE_Handler {
             }
         }
         set_transient( 'wple_vulnerability_scan', $threats, 0 );
+    }
+
+    public function wple_malware_scan() {
+        if ( isset( $_GET['wple_malware'] ) ) {
+            if ( !wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['wple_malware'] ) ), 'wple_malwarescan' ) || !current_user_can( 'manage_options' ) ) {
+                exit( 'Authorization Failure' );
+            }
+            update_option( 'wple_malware_lastscan', time() );
+            //run scan
+            new WPLE_Mscan();
+        }
     }
 
     /**
